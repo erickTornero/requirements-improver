@@ -1,0 +1,2 @@
+langchain==0.0.301
+pypdf==3.16.2
