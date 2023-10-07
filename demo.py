@@ -27,6 +27,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     share = args.share
+    port = args.port
     top_k_default = args.top_k_default
     device = args.device
     database_vectors_path = args.database_vectors_path
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     args_launch = {
         'server_name': '0.0.0.0',
         'share': share,
+        'server_port': port
     }
 
     from pipelines.pipe import Pipe
