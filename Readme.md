@@ -18,7 +18,8 @@ This project aims to improve existing technical requirements based on scientific
 2. Download technical pdfs on folder `./pdfs`
 3. Install Requirements and the package
 ```
--conda create -n env_name python=3.9
+conda create -n env_name python=3.9
+pip install -r requirements.txt
 pip install -e .
 ```
 4. Generate vectors embeddings of the pdfs
