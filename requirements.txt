@@ -5,3 +5,4 @@ accelerate==0.22.0
 fastapi==0.94.0
 openai==0.28.0
 pandas==1.5.3
+chromadb==0.4.13
