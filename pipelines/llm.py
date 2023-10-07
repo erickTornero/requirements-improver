@@ -39,12 +39,12 @@ class LLMQA:
         return wrapped_text
     
     def process_llm_response(self, llm_response):
-        import pdb;pdb.set_trace()
         text = self.wrap_text_preserve_newlines(llm_response["result"])
         sources = [
             {
                 "page": int(source.metadata["page"]),
-                "file": source.metadata["source"]
+                "file": source.metadata["source"],
+                "source_text": source.page_content
             } for source in llm_response["source_documents"]
         ]
 
