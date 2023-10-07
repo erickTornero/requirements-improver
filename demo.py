@@ -23,12 +23,13 @@ if __name__ == "__main__":
     parser.add_argument('--top-k-default', dest='top_k_default', type=int, default=3)
     parser.add_argument('--port', dest='port', type=int, default=7860)
     parser.add_argument('--device', '-p', dest='device', type=str, default='cuda')
+    parser.add_argument("--database-vectors-path", dest="database_vectors_path", type=str, default="database-vectors")
     args = parser.parse_args()
     
     share = args.share
     top_k_default = args.top_k_default
     device = args.device
-
+    database_vectors_path = args.database_vectors_path
 
     args_launch = {
         'server_name': '0.0.0.0',
@@ -39,7 +40,8 @@ if __name__ == "__main__":
 
     pipe = Pipe(
         embedder_device=device,
-        top_k=top_k_default
+        top_k=top_k_default,
+        persistance_vectors=database_vectors_path
     )
 
     def generate(text_query: str):

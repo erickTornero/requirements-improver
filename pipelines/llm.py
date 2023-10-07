@@ -1,7 +1,6 @@
 import textwrap
 from typing import Any
 from pipelines.builded_templates import chat_template
-from langchain.llms import OpenAI
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
@@ -48,6 +47,6 @@ class LLMQA:
             } for source in llm_response["source_documents"]
         ]
 
-        print(f"llm response\n================\n{llm_response}\n=============")
-        print(f"{sources}\n=======\n")
+        #print(f"llm response\n================\n{llm_response}\n=============")
+        #print(f"{sources}\n=======\n")
         return text, sources
