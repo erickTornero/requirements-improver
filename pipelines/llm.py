@@ -1,6 +1,6 @@
 import textwrap
 from typing import Any
-
+from pipelines.builded_templates import chat_template
 from langchain.llms import OpenAI
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
@@ -18,11 +18,13 @@ class LLMQA:
             temperature=temperature_llm,
             model=openai_chat_model
         )
+        chain_type_kwargs = {"prompt": chat_template}
         self.qa_chain = RetrievalQA.from_chain_type(
             llm=turbo_llm,
             chain_type=chain_type,
             retriever=retriever,
-            return_source_documents=True
+            return_source_documents=True,
+            chain_type_kwargs=chain_type_kwargs
         )
 
     def __call__(self, text_query: str) -> Any:

@@ -17,7 +17,6 @@ class Pipe:
         chain_type_llm="stuff",
         openai_chat_model="gpt-3.5-turbo",
         temperature_llm=0.0
-
     ) -> None:
         assert os.path.exists(openai_path_credentials), f"openai path credentials <{openai_path_credentials}> does not exists"
         Pipe.set_credentials(openai_path_credentials)
