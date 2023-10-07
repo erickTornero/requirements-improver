@@ -50,7 +50,8 @@ if __name__ == "__main__":
         response, sources = pipe(text_query)
         sources_files_txt = "\n".join([f"File: {s['file']}\t Page: {s['page']}" for s in sources])
 
-        sources_docs_txt = "\n".join(s["source_text"] for s in sources)
+        sources_docs_txt = "\n-----------\n".join(s["source_text"] for idx, s in enumerate(sources))
+
         sources_txt = f"{sources_files_txt}\n\n=========\n{sources_docs_txt}"
         return response, 0, sources_txt
 
