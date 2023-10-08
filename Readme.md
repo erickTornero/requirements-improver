@@ -88,3 +88,105 @@ Use some `prompt-engineering` to improve this.
 2. If you add new pdf docs please re-generate the database (remove/run the script to generate embeddings (step 4)) since i'm not sure if iteratively adding new docs could duplicate docs.
 
 3. Check the [demo.py](./demo.py) file to know how to use the [pipeline](./pipelines/pipe.py) (which is the main class you must be working on) and integrate with the app.
+
+
+## API USAGE
+
+Api builds a single endpoint for stateless chat, which means you need to send the chat to the endpoint.
+
+#### Endpoint
+Main path
+
+
+- ```POST -> http://...:8000/chat```
+Requires basic auth
+
+Request body
+```json
+{
+  // @query_str: New user question
+  "query_str": "string",
+  // @past_messages: contains all the conversation with the ai assistant
+  // This is a list of INTERCALATED messages from the user and the assistant. 
+  // It does not contains the current query which is in the param above
+  // at the beggining it could be null or an empty list.
+  "past_messages": [
+    {
+      "role": "user",
+      "content": "...",
+    },
+    {
+      "role": "assistant",
+      "content": "...",
+    }
+  ],
+  // @top_k: to search the top-k paragraphs, lets use 3 for now, (optional)
+  "top_k": 3,
+  // @previous_context: context got in previous requests, at the begginning it is null or an empty list
+  // in each response we return this, so, you just need to resend the context.
+  "previous_contexts": [
+    {
+      "paragraph": "....",
+      "file": "filename.pdf",
+      "page": page_int
+    }
+  ]
+}
+```
+
+Request Response
+```json
+{
+  //@ai_response: response given by the llm
+  "ai_response": "A ceramic is a non-metallic ...",
+  //@context: context used from the docs, as explained before, you should resend this in the request body, 
+  "context": [
+    {
+      "paragraph": "designing, verifying and accepting ... 
+      brittle \nmaterials. \n \n1.2.1 Fracture of Glass",
+      "page": 0,
+      "file": "pdfs/20070019378.pdf"
+    },
+    {
+      "paragraph": "intensity, and ... at load when water",
+      "page": 1,
+      "file": "pdfs/20070019378.pdf"
+    },
+    {
+      "paragraph": "Structural Design of Glass and Ceramic Components \nfor Space System ... Ceramics",
+      "page": 0,
+      "file": "pdfs/20070019378.pdf"
+    }
+  ],
+  //@links of the pdfs to use directly, 
+  // but you can get these also from the context [file and page]
+  // currently not working xD
+  "links": [
+    "http://www.example.com/pdfs/20070019378.pdf#page=0",
+    "http://www.example.com/pdfs/20070019378.pdf#page=1",
+    "http://www.example.com/pdfs/20070019378.pdf#page=0"
+  ],
+  // @chat_debug_messages: input for openai, we wont use this for now,
+  // only for debugging
+  "chat_debug_messages": [
+    {
+      "role": "system",
+      "content": "Use ... s\n"
+    },
+    {
+      "role": "user",
+      "content": "what is a ceramic?"
+    }
+  ]
+}
+```
+
+
+Health path
+- ```GET -> http://...:8000/health```
+```json
+Response with  if server is up, otherwise throws an error. it does not requires auth for now.
+{'status': 'ok'}
+```
+
+
