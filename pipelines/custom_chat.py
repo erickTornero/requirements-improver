@@ -1,9 +1,9 @@
 from typing import Dict, List, Optional
-from pipelines.prompt_template import system_prompt
+from pipelines.prompt_template import system_prompt, human_message
 from pipelines.embedder_storage import EmbeddingsStorage
 from langchain.chat_models import ChatOpenAI
 import pandas as pd
-class ChatGPT:
+class DynamicContextChat:
     def __init__(
         self,
         embedder: EmbeddingsStorage,
@@ -24,21 +24,23 @@ class ChatGPT:
             text += f"{role}: {content}\n\n"
         return text
 
-
     def get_dynamic_chat_messages(
         self, 
         query_str: str, 
-        past_messages: List[dict],
+        past_messages: Optional[List[Dict[str, str]]]=None,
         top_k: int=3,
         previous_contexts: Optional[List[Dict[str, str]]]=None
     ):
         # validate past messages
-        for message in past_messages:
-            assert "role" in message and "content" in message, "Wrong message structure"
-            assert message["role"] in ["system", "user", "assistant"], "Wrong role!"
+        if past_messages is not None:
+            for message in past_messages:
+                assert "role" in message and "content" in message, "Wrong message structure"
+                assert message["role"] in ["system", "user", "assistant"], "Wrong role!"
+        else:
+            past_messages = []
         messages = past_messages + [{
             "role": "user",
-            "content": query_str
+            "content": human_message.format(question=query_str)
         }]
 
         # Build Prompt for query embeddings for new context
@@ -86,7 +88,7 @@ class ChatGPT:
     def __call__(
         self,
         query_str: str,
-        past_messages: List[dict],
+        past_messages: Optional[List[Dict[str, str]]]=None,
         top_k: int=3,
         previous_contexts: Optional[List[Dict[str, str]]]=None,
     ):
