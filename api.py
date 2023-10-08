@@ -21,12 +21,11 @@ pipe = Pipe(
     temperature_llm=temperature_llm
 )
 
-
 class ChatRequest(BaseModel):
     query_str: str
     pass_conversation: str
 
-@app.post('/chat', status_code=status.HTTP_20)
+@app.post('/chat', status_code=status.HTTP_200_OK)
 def chat(
     request: ChatRequest
 ):
