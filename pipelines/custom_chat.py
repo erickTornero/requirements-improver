@@ -124,7 +124,6 @@ class DynamicContextChat:
                 "completion_tokens": cb.completion_tokens,
                 "context_tokens": cb.prompt_tokens
             }
-            print(cb.total_tokens)
 
         return answer, messages, context
 

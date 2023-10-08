@@ -39,21 +39,27 @@ if __name__ == "__main__":
     }
 
     from pipelines.pipe import Pipe
-
+    from pipelines.custom_chat import DynamicContextChat
     pipe = Pipe(
         embedder_device=device,
-        top_k=top_k_default,
         persistance_vectors=database_vectors_path
     )
 
     def generate(text_query: str):
-        response, sources = pipe(text_query)
-        sources_files_txt = "\n".join([f"File: {s['file']}\t Page: {s['page']}" for s in sources])
+        response, messages, context = pipe(
+            query_str=text_query,
+            past_messages=None,
+            top_k=3,
+            previous_contexts=None
+        )
+        response, messages, context = pipe(text_query)
+        sources_files_txt = "\n".join([f"File: {s['file']}\t Page: {s['page']}" for s in context])
 
-        sources_docs_txt = "\n-----------\n".join(s["source_text"] for idx, s in enumerate(sources))
+        messages_txt = DynamicContextChat.parse_messages(messages)
+        #sources_docs_txt = "\n-----------\n".join(s["source_text"] for idx, s in enumerate(sources))
 
-        sources_txt = f"{sources_files_txt}\n\n=========\n{sources_docs_txt}"
-        return response, 0, sources_txt
+        sources_txt = f"{sources_files_txt}\n\n=========\n{messages_txt}"
+        return response["ai"], response['total_tokens'], sources_txt
 
     demo = get_blocks(generate)
     demo.queue(concurrency_count=4, max_size=2).launch(max_threads=4, **args_launch)
