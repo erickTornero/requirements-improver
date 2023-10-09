@@ -5,6 +5,7 @@ from fastapi import FastAPI, Depends, status, Request
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 from pipelines.pipe import Pipe
 
@@ -12,6 +13,15 @@ temperature_llm = 0.0
 top_k = 3
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 ## security
 username_cred = os.environ.get('USERNAME_APP', "isac-hackaton-2023")
