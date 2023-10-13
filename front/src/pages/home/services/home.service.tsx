@@ -1,13 +1,14 @@
 import axios from "axios"
 
-const baseUrl =   import.meta.env.APP_API_BASE_URL+'chat'
+const baseUrl =   import.meta.env.VITE_APP_API_BASE_URL+'chat'
 
 
 interface PostChatInterface {
     query_str : string
 }
 
-export const postChat = async (ask:PostChatInterface ): Promise<any> =>{ 
+export const postChat = async (ask:PostChatInterface ): Promise<any> =>{
+  console.log(baseUrl) 
     const resp = await axios.post(baseUrl, JSON.stringify(ask))
     return resp
   }
