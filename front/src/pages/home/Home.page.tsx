@@ -55,6 +55,10 @@ function HomePage() {
   };
 
   const sendAsk = () => {
+    if(!!!ask){
+      return
+    }
+    
     setIsSendAsk(true)
     
     setResponseAsk({} as responseAskInterface)
@@ -101,16 +105,17 @@ function HomePage() {
           <div className="flex flex-col gap-4 px-1 pt-4 pb-4" ref={scrollRef}>
             {
               !!requestAsk.query_str &&
-              <ChatBoxBlurComponent  isBot={false} >
+              <ChatBoxBlurComponent isBot={false} >
                 <p>{requestAsk.query_str} </p>
               </ChatBoxBlurComponent>
             }
             {
               !!responseAsk.ai_response &&
-              <ChatBoxBlurComponent  isBot={true} >
+              <ChatBoxBlurComponent isBot={true} >
                 <>
                   <p className="whitespace-pre-line">{responseAsk.ai_response}</p>
                   <hr className="my-4 border-white-5" />
+                  <h6 className="text-white-22 text-xs font-bold mb-2">Related files</h6>
                   <div className="mt-2">
                     <ul className="flex flex-col gap-2">
                       {
@@ -154,7 +159,7 @@ function HomePage() {
                 {
                   isSendAsk
                   ? <label className="flex flex-row gap-2 items-center"> <ImSpinner className='animate-spin'/> Asking... </label>
-                  : 'Ask isac AI'
+                  : 'Ask isac'
                 }
                 
               </button>
@@ -165,16 +170,16 @@ function HomePage() {
       <div className="basis-1/2 p-4 h-full overflow-auto"> 
         {
           !!currentPDF.file 
-          ? <>
-              <div className="flex flex-row justify-between mb-2"> 
-                <p className="text-white-75 truncate">{currentPDF.file}</p>
-                <p className="text-white-75"> page: {currentPDF.page}</p>
-              </div>
-              <div className="h-full overflow-y-auto">
-                <Document className='m-4' file={currentPDF.file} options={options}><Page pageNumber={currentPDF.page} /> </Document>
-              </div>
-            </>
-          : <div className="text-white-50"> File not selected</div>
+            ? <>
+                <div className="flex flex-row justify-between mb-2"> 
+                  <p className="text-white-75 truncate">{currentPDF.file}</p>
+                  <p className="text-white-75"> page: {currentPDF.page}</p>
+                </div>
+                <div className="h-full overflow-y-auto">
+                  <Document className='m-4' file={currentPDF.file} options={options}><Page pageNumber={currentPDF.page} /> </Document>
+                </div>
+              </>
+            : <div className="text-white-50"> File not selected</div>
         
         }
       </div>

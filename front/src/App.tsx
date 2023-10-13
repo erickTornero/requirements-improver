@@ -1,19 +1,35 @@
 import './App.css'
-import { BrowserRouter } from 'react-router-dom'
 import PublicRoute from './routes/Public.route'
 import SideBarLayout from './layouts/SideBar.layout'
+import { useToken } from './pages/login/hooks/useToken'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function App() {
+  const location = useLocation()
+  const navigator = useNavigate()
+  const [isLogin, setIsLogin] = useState<boolean>(false)
+  const token = useToken()
+  useEffect(() => {
+    setIsLogin(!!token.getToken())
+    isLogin ? navigator('/') : navigator('/login')
+  },[location.pathname])
   return (
     <>
-      <BrowserRouter>
-        <div className='flex flex-row'>
-          <SideBarLayout></SideBarLayout>
-          <div className='ml-[280px] w-full h-screen'>
-            <PublicRoute/>
+      {
+        isLogin
+        ? <div className='flex flex-row h-full'>
+            <SideBarLayout></SideBarLayout>
+            <div className='w-full h-screen'>
+              <PublicRoute/>
+            </div>
           </div>
-        </div>
-      </BrowserRouter>
+        : <div className='flex flex-row h-full'>
+            <div className='w-full h-screen'>
+              <PublicRoute/>
+            </div>
+          </div>
+      }
     </>
   )
 }

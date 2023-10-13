@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const baseUrl = 'http://132.145.129.160:5002/chat'
+const baseUrl =   import.meta.env.APP_API_BASE_URL+'chat'
 
 
 interface PostChatInterface {
